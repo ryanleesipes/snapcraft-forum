@@ -45,6 +45,16 @@ app.on('ready', () => {
       //Menu bar kept around in event that we want to use in future.
       //mainWindow.setAutoHideMenuBar(true);
 
+      var wc = mainWindow.webContents;
+
+      wc.on('will-navigate', function(e, url) {
+        /* If url isn't the actual page */
+        if(url != wc.getURL()) {
+          e.preventDefault();
+          electron.shell.openExternal(url);
+        }
+      });
+
       mainWindow.on('closed', () => {
           mainWindow = null;
       });
