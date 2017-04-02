@@ -4,50 +4,18 @@ const electron = require('electron');
 const app = electron.app;
 const shell = electron.shell;
 
-const appName = app.getName();
+// when we start there is no appName yet, hardcode it for now
+const appName = 'snapcraft.io';
 
-const macTemplate = [
+const Template = [
     {
         label: appName,
+        role: 'window',
         submenu: [
             {
-                label: `About ${appName}`,
-                role: 'about'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                label: 'Services',
-                role: 'services',
-                submenu: []
-            },
-            {
-                type: 'separator'
-            },
-            {
-                label: `Hide ${appName}`,
-                accelerator: 'Cmd+H',
-                role: 'hide'
-            },
-            {
-                label: 'Hide Others',
-                accelerator: 'Cmd+Shift+H',
-                role: 'hideothers'
-            },
-            {
-                label: 'Show All',
-                role: 'unhide'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                label: `Quit ${appName}`,
-                accelerator: 'Cmd+Q',
-                click() {
-                    app.quit();
-                }
+                label: `Quit`,
+                accelerator: 'CmdorCtrl+Q',
+                role: 'close'
             }
         ]
     },
@@ -77,25 +45,29 @@ const macTemplate = [
         ]
     },
     {
-        label: 'Window',
-        role: 'window',
+        label: 'Go',
         submenu: [
             {
-                label: 'Minimize',
-                accelerator: 'CmdOrCtrl+M',
-                role: 'minimize'
+                label: 'Back',
+                accelerator: 'Alt+Left',
+                click() {
+                    app.BrowserWindow.getFocusedWindow().webContents.goBack();
+                }
             },
             {
-                label: 'Close',
-                accelerator: 'CmdOrCtrl+W',
-                role: 'close'
+                label: 'Forward',
+                accelerator: 'Alt+Right',
+                click() {
+                    app.BrowserWindow.getFocusedWindow().webContents.goForward();
+                }
             },
             {
                 type: 'separator'
             },
             {
-                label: 'Bring All to Front',
-                role: 'front'
+                label: 'Reload',
+                accelerator: 'CmdOrCtrl+R',
+                role: 'reload'
             }
         ]
     },
@@ -104,7 +76,8 @@ const macTemplate = [
         role: 'help',
         submenu: [
             {
-                label: `Snapcraft Website`,
+                label: `https://snapcraft.io`,
+                accelerator: 'CmdOrCtrl+H',
                 click() {
                     shell.openExternal('https://snapcraft.io');
                 }
@@ -113,8 +86,4 @@ const macTemplate = [
     }
 ];
 
-if (process.platform === 'darwin') {
-    module.exports = electron.Menu.buildFromTemplate(macTemplate);
-} else {
-    module.exports = {}
-}
+module.exports = electron.Menu.buildFromTemplate(Template);

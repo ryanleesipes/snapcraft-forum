@@ -36,6 +36,7 @@
     "electron-window-state": "latest"
   },
   "dependencies": {
-    "electron-window-state": "latest"
+    "electron-window-state": "latest",
+    "electron-context-menu": "^0.8.0"
   }
 }
