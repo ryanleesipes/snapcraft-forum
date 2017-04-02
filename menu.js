@@ -1,7 +1,7 @@
 'use strict';
 
 const electron = require('electron');
-const app = electron.app;
+const app = electron;
 const shell = electron.shell;
 
 // when we start there is no appName yet, hardcode it for now
