@@ -3,16 +3,22 @@
 const fs = require('fs');
 const path = require('path');
 const electron = require('electron');
-const appMenu = require('./menu');
+const appMenu = require('./menu.js');
 const windowStateKeeper = require('electron-window-state');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const shell = electron.shell;
 
 let mainWindow;
 
 function isEmptyObject(obj) {
     return Object.keys(obj).length === 0;
 }
+
+// Show a context menu on right click for copy/paste/save-image
+require('electron-context-menu')({
+        showInspectElement: false
+});
 
 app.on('ready', () => {
     if (!isEmptyObject(appMenu)) {
@@ -35,15 +41,13 @@ app.on('ready', () => {
           minWidth: 500,
           minHeight: 300,
           icon: 'resources/icon.png',
+          show: false,
           webPreferences: {
               nodeIntegration: false
           }
       });
 
       mainWindow.loadURL('https://forum.snapcraft.io/');
-      mainWindow.setMenu(null);
-      //Menu bar kept around in event that we want to use in future.
-      //mainWindow.setAutoHideMenuBar(true);
 
       var wc = mainWindow.webContents;
 
@@ -55,6 +59,11 @@ app.on('ready', () => {
         }
       });
 
+      // only show window when content is ready (prevents white window on startup)
+      mainWindow.on('ready-to-show', function() {
+          mainWindow.show();
+          mainWindow.focus();
+      });
       mainWindow.on('closed', () => {
           mainWindow = null;
       });
@@ -70,6 +79,12 @@ app.on('ready', () => {
         page.insertCSS(
             fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
     })
+
+    // Make ctrl+click open links in default browser, not in new electron window
+    page.on('new-window', function(e, url) {
+          e.preventDefault();
+          shell.openExternal(url);
+    });
 });
 
 // Quit when all windows are closed, except on OS X
