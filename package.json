@@ -1,7 +1,7 @@
 {
   "name": "snapcraft-forum",
   "productName": "Snapcraft Forum",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Official Snapcraft forum desktop app",
   "main": "main.js",
   "scripts": {
