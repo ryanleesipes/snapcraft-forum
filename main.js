@@ -8,7 +8,7 @@ const appMenu = require('./menu.js');
 const windowStateKeeper = require('electron-window-state');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-const shell = electron.shell;
+const child_process = require('child_process');
 
 let mainWindow;
 
@@ -56,7 +56,8 @@ app.on('ready', () => {
         /* If url isn't the actual page */
         if(url != wc.getURL()) {
           e.preventDefault();
-          electron.shell.openExternal(url);
+          const page = unescape(url).split('url=')[1];
+          child_process.execSync('xdg-open ' + page);
         }
       });
 
@@ -83,7 +84,7 @@ app.on('ready', () => {
 
     // Make ctrl+click open links in default browser, not in new electron window
     page.on('new-window', function(url) {
-          child_process.execSync('xdg-open' + url)
+          child_process.execSync('xdg-open ' + url);
     });
 });
 

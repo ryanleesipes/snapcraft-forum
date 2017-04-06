@@ -2,7 +2,7 @@
 
 const electron = require('electron');
 const app = electron;
-const shell = electron.shell;
+const child_process = require('child_process');
 
 // when we start there is no appName yet, hardcode it for now
 const appName = 'snapcraft.io';
@@ -79,7 +79,7 @@ const Template = [
                 label: `https://snapcraft.io`,
                 accelerator: 'CmdOrCtrl+H',
                 click() {
-                    shell.openExternal('https://snapcraft.io');
+                    child_process.execSync('xdg-open https://snapcraft.io');
                 }
             }
         ]
